@@ -7,6 +7,7 @@
 //
 
 #import "FormCreateUserViewController.h"
+#import "UserViewController.h"
 
 @interface FormCreateUserViewController ()
 
@@ -57,9 +58,28 @@
         if(!error){
             NSString* str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding ];
             NSLog(@"%@@",str);
-            [self.navigationController popToViewController:self animated:YES];
-        }else{
-            NSLog(@"ERREUR");
+            
+            
+            NSData* serverResponseJSON=[str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary* jsondict =[NSJSONSerialization JSONObjectWithData: serverResponseJSON options:0 error:&error];
+            
+            NSLog(@"%@",[jsondict objectForKey:@"code"]);
+            NSLog(@"%@",[jsondict objectForKey:@"msg"]);
+            
+            if([jsondict objectForKey:@"code"]==0){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"SUCCESS"
+                                                                message:[jsondict objectForKey:@"msg"]
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                
+                UserViewController* form = [UserViewController new];
+                
+                form.delegate=self;
+                [self.navigationController pushViewController:form  animated:YES];
+            }
+          
         }
     });
    

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@protocol CreateListShoppingViewControllerDelegate <NSObject>
+@end
 @interface CreateListShoppingViewController : UIViewController
-
+@property(strong, nonatomic) id<CreateListShoppingViewControllerDelegate> delegate;
 @end

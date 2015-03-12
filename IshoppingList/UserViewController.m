@@ -6,8 +6,12 @@
 //  Copyright (c) 2015 Ridley Marinette. All rights reserved.
 //
 
+
+
 #import "UserViewController.h"
 #import "FormCreateUserViewController.h"
+//Importer la view à afficher
+#import "ListShoppingViewController.h"
 
 @interface UserViewController ()
 
@@ -28,7 +32,7 @@
 }
 
 -(void)onTouchADD{
- FormCreateUserViewController* form = [FormCreateUserViewController new];
+ FormCreateUserViewController *form = [FormCreateUserViewController new];
     
    form.delegate=self;
     [self.navigationController pushViewController:form  animated:YES];
@@ -54,7 +58,11 @@
 }
 */
 
+
+
 - (IBAction)btnConnect:(id)sender  {
+    
+    //tache asynchrone pour la connection
     dispatch_queue_t queue=dispatch_queue_create("connectUser_queue", NULL);
     dispatch_async(queue, ^{
         
@@ -69,13 +77,36 @@
         //Vérification de l'url envoyé
         NSLog(@"%@",strUrl);
         NSURL* URL=[NSURL URLWithString:strUrl];
+        
+        //initalisation de la requête
         NSURLRequest* request= [NSURLRequest requestWithURL:URL];
         NSError* error=nil;
-        NSData* data =[NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
         
+        //Exécutiion de la requête
+        NSData* data =[NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+        //NSLog(@"%@",data);
         if(!error){
+            //Récupération de la réponse du serveur
             NSString* str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding ];
             NSLog(@"%@@",str);
+            //encodage du message server et parsing en objet d'ou objectForkey
+            NSData* serverResponseJSON=[str dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary* jsondict =[NSJSONSerialization JSONObjectWithData: serverResponseJSON options:0 error:&error];
+            NSLog(@"%@",[jsondict objectForKey:@"code"]);
+            NSLog(@"%@",[jsondict objectForKey:@"msg"]);
+            NSInteger codeReturn=[[jsondict objectForKey:@"code"]integerValue];
+            
+            //on teste si on a reussi la connection
+            if(codeReturn == 0 ){
+                NSLog(@"Connecté");
+                //je cree l objet qui contiendra la view a pusher
+                ListShoppingViewController *form = [ListShoppingViewController new];
+                //puis je call la view via deledate
+                form.delegate=self;
+                [self.navigationController pushViewController:form  animated:YES];
+            }else{NSLog(@"NON Connecté");}
+       
+            
         }
     });
 
