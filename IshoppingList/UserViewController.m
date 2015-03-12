@@ -30,7 +30,7 @@
 -(void)onTouchADD{
  FormCreateUserViewController* form = [FormCreateUserViewController new];
     
-    form.delegate=self;
+   form.delegate=self;
     [self.navigationController pushViewController:form  animated:YES];
 }
 
@@ -54,4 +54,30 @@
 }
 */
 
+- (IBAction)btnConnect:(id)sender  {
+    dispatch_queue_t queue=dispatch_queue_create("connectUser_queue", NULL);
+    dispatch_async(queue, ^{
+        
+        //Récupération des valeurs des textFields
+        NSString* email=self.textFieldLogin.text;
+        NSString* password=self.textFieldPassword.text;
+        
+        
+        //Passage en paramètre des valeurs récupérées dans l'url à destination du WebService
+        NSString* strUrl=[NSString stringWithFormat:@"http://appspaces.fr/esgi/shopping_list/account/login.php?email=%@&password=%@",email,password];
+        
+        //Vérification de l'url envoyé
+        NSLog(@"%@",strUrl);
+        NSURL* URL=[NSURL URLWithString:strUrl];
+        NSURLRequest* request= [NSURLRequest requestWithURL:URL];
+        NSError* error=nil;
+        NSData* data =[NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+        
+        if(!error){
+            NSString* str = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding ];
+            NSLog(@"%@@",str);
+        }
+    });
+
+}
 @end

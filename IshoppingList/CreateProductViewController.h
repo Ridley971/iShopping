@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface CreateProductViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UITextField *name;
+@property (weak, nonatomic) IBOutlet UITextField *quantity;
 
+@property (weak, nonatomic) IBOutlet UITextField *price;
+
+- (IBAction)btnCreateProduct:(id)sender;
 @end

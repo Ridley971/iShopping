@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *textFieldFirstName;
 @property (weak, nonatomic) IBOutlet UITextField *textFieldLastName;
 @property (weak, nonatomic) IBOutlet UITextField *textFieldEmail;
+@property (weak, nonatomic) IBOutlet UITextField *textFieldPassword;
 @property(weak, nonatomic) id<FormCreateUserViewControllerDelegate> delegate;
 - (IBAction)onTouchValidate:(id)sender;
 

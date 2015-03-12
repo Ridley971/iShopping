@@ -10,4 +10,6 @@
 
 @interface ViewListShoppingController : UIViewController
 
+//@property (weak, nonatomic) IBOutlet UITableView *shoppingList;
+
 @end
